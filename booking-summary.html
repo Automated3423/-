@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ملخص الحجز | مركز سلامة المركبات</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+  <style>
+    body{font-family:"Cairo",sans-serif;background:#f8fafc;color:#0f172a}
+    .container-narrow{width:min(1100px,100% - 32px);margin:auto}
+    .header{background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-index:20}
+    .header .wrap{display:flex;align-items:center;height:64px;padding:0 12px}
+    .brand img{height:42px}
+    .cardx{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:18px}
+    .grid{display:grid;gap:14px}
+    @media(min-width:992px){.grid-2{grid-template-columns:1.2fr .8fr}}
+    .row-item{display:grid;grid-template-columns:160px 1fr;gap:10px;padding:8px 0;border-bottom:1px dashed #e5e7eb}
+    .row-item:last-child{border-bottom:0}
+    .key{color:#475569;font-weight:700}
+    .val{font-weight:800}
+    .btn-continue{background:#0ea5a5;color:#fff;font-weight:900;border:0;border-radius:12px;padding:.9rem 1.2rem;transition:.2s;text-decoration:none;display:inline-block}
+    .btn-continue:hover{background:#0c8e8e;transform:translateY(-1px)}
+    .price-box{background:#0ea5a510;border:2px solid #0ea5a5;border-radius:14px;padding:16px;margin-top:8px}
+    .price-line{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #e2e8f0}
+    .price-line:last-child{border-bottom:0}
+    .price-line.total{font-size:1.2rem;font-weight:900;color:#0c4a6e}
+    .ksa-plate{display:grid;grid-template-columns:1fr 48px;max-width:520px;background:#fff;border:4px solid #111;border-radius:14px;overflow:hidden;margin:auto}
+    .ksa-cells{display:grid;grid-auto-rows:minmax(58px,1fr)}
+    .ksa-row{display:grid;grid-template-columns:1fr 1fr;align-items:center}
+    .ksa-en{border-top:2px solid #111}
+    .ksa-row .col-r{border-inline-start:2px solid #111}
+    .ksa-cell{display:flex;align-items:center;justify-content:center;gap:12px;padding:8px;font-weight:900;color:#111}
+    .ksa-ar .ksa-cell{font-size:26px}
+    .ksa-en .ksa-cell{font-size:20px;letter-spacing:2px}
+    .ksa-band{background:#0a6ca8;color:#fff;display:flex;align-items:center;justify-content:center;writing-mode:vertical-rl;font-weight:900;font-size:12px}
+  </style>
+</head>
+<body>
+
+<header class="header">
+  <div class="wrap">
+    <a class="brand" href="index.html"><img src="https://i.postimg.cc/ZKC5781D/2025-07-04-082630.png" alt="شعار سلامة"></a>
+  </div>
+</header>
+
+<div class="container-narrow">
+  <div class="grid grid-2 mt-4">
+    <!-- بيانات العميل -->
+    <section class="cardx">
+      <h5><i class="fa-regular fa-clipboard"></i> ملخص الحجز</h5>
+      <div class="row-item"><div class="key">الاسم</div><div class="val">محمد أحمد</div></div>
+      <div class="row-item"><div class="key">الجوال</div><div class="val">0501234567</div></div>
+      <div class="row-item"><div class="key">نوع الفحص</div><div class="val">فحص فني</div></div>
+      <div class="row-item"><div class="key">نوع المركبة</div><div class="val">مركبة خاصة</div></div>
+      <div class="row-item"><div class="key">المنطقة</div><div class="val">منطقة الرياض</div></div>
+      <div class="row-item"><div class="key">الموعد</div><div class="val">2025-09-25 — 10:00 صباحًا</div></div>
+      <div class="row-item"><div class="key">رقم اللوحة</div><div class="val">أ ب ج 1234</div></div>
+    </section>
+
+    <!-- لوحة + السعر -->
+    <aside class="grid">
+      <section class="cardx text-center">
+        <h6><i class="fa-solid fa-car"></i> معاينة اللوحة</h6>
+        <div class="ksa-plate mt-2">
+          <div class="ksa-cells">
+            <div class="ksa-row ksa-ar" dir="rtl">
+              <div class="ksa-cell">١٢٣٤</div>
+              <div class="ksa-cell col-r">أ ب ج</div>
+            </div>
+            <div class="ksa-row ksa-en" dir="ltr">
+              <div class="ksa-cell">1234</div>
+              <div class="ksa-cell col-r">J B A</div>
+            </div>
+          </div>
+          <div class="ksa-band">KSA</div>
+        </div>
+      </section>
+
+      <section class="price-box">
+        <div class="price-line"><span>رسوم الفحص</span><strong>115.00 ر.س</strong></div>
+        <div class="price-line"><span>ضريبة 15%</span><strong>17.25 ر.س</strong></div>
+        <div class="price-line total"><span>الإجمالي</span><strong>132.25 ر.س</strong></div>
+      </section>
+    </aside>
+  </div>
+
+  <!-- زر المتابعة للدفع -->
+  <div class="cardx mt-3 text-end">
+    <a href="payment.html" class="btn-continue">💳 متابعة للدفع</a>
+  </div>
+</div>
+
+<footer class="py-4 text-center text-muted">
+  © 2025 سلامة — جميع الحقوق محفوظة
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

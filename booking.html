@@ -1,0 +1,940 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>خدمة الفحص الفني الدوري | مركز سلامة المركبات</title>
+
+  <!-- Meta -->
+  <meta name="description" content="احجز موعدك لفحص المركبة في مراكز سلامة. اختر المنطقة والوقت المناسب لك." />
+  <meta property="og:title" content="خدمة الفحص الفني الدوري | مركز سلامة المركبات" />
+  <meta property="og:description" content="احجز موعدك لفحص المركبة بسهولة وسرعة" />
+  <meta name="theme-color" content="#0ea5a5" />
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome (للأيقونات مثل fas fa-home) -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+
+  <style>
+    :root{--primary:#0ea5a5;--primary-600:#0c8e8e;--ink:#0f172a;--muted:#64748b;--line:#e5e7eb;--bg:#ffffff;--soft:#f8fafc;--radius:16px;--success:#10b981;--error:#ef4444;}
+    *{box-sizing:border-box} html,body{margin:0}
+    body{font-family:"Cairo",system-ui,sans-serif;line-height:1.65;color:var(--ink);background:var(--bg);scroll-behavior:smooth}
+    a{text-decoration:none;color:inherit} img{max-width:100%;display:block}
+    .container{width:min(1400px,100% - 16px);margin-inline:auto}
+
+    /* Header */
+    .booking-header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);box-shadow:0 2px 20px rgba(0,0,0,.05)}
+    .header-content{display:flex;align-items:center;justify-content:flex-start;height:80px;padding:0 1rem}
+    .logo-section{display:flex;align-items:center}
+    .logo-link{display:flex;align-items:center;gap:1rem;text-decoration:none;color:var(--ink);transition:transform .3s ease}
+    .logo-link:hover{transform:scale(1.02)}
+    .logo-img{height:48px;width:auto;transition:transform .3s ease}
+    .logo-link:hover .logo-img{transform:scale(1.05)}
+    .logo-text{display:flex;flex-direction:column;gap:.1rem}
+    .brand-name{font-size:1.5rem;font-weight:900;color:var(--primary);line-height:1}
+    .service-name{font-size:.85rem;color:var(--muted);font-weight:600;line-height:1}
+    .header-actions{display:flex;align-items:center;gap:1.5rem}
+    @media (max-width: 768px) {
+      .header-content{flex-direction:column;height:auto;padding:1rem;gap:1rem}
+      .logo-text{text-align:center}
+      .header-actions{width:100%;justify-content:center}
+    }
+
+    /* Title */
+    .title .lin-1{color:var(--muted);margin:0}
+    .title .lin-2{font-size:2rem;font-weight:900;margin:0}
+    .title .lin-2 span{color:var(--primary)}
+    .title .lin-3{color:var(--ink);font-weight:700}
+
+    /* Card/Form */
+    .booking-form{max-width:820px;margin:1rem auto 0;background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:2rem;box-shadow:0 8px 32px rgba(0,0,0,.06)}
+    .section-title{font-size:1.2rem;font-weight:800;margin:1.2rem 0 .8rem;color:var(--ink);display:flex;gap:.5rem;align-items:center}
+    .btn-full{width:100%}
+
+    /* Alerts */
+    .alert-error{background:#fff5f5;border:1px solid #fecaca;color:#b91c1c}
+    .validation-feedback{font-size:.85rem;margin-top:.25rem;min-height:1.2rem;display:block}
+    .form-control.error{border-color:var(--error);box-shadow:0 0 0 0.2rem rgba(239, 68, 68, 0.25)}
+    .form-control.valid{border-color:var(--success);box-shadow:0 0 0 0.2rem rgba(16, 185, 129, 0.25)}
+    .text-danger{color:var(--error) !important}
+    .text-success{color:var(--success) !important}
+    
+    /* إخفاء عنصر حالة الاتصال */
+    .connection-status{display:none !important;visibility:hidden !important}
+
+    /* Footer */
+    footer{background:linear-gradient(135deg,#0f172a,#1e293b);color:#fff;padding:2rem 1rem;text-align:center;margin-top:2rem}
+    footer::before{content:'';display:block;height:4px;background:linear-gradient(90deg,var(--primary),var(--primary-600));margin:-2rem 0 1.5rem}
+
+    /* Progress bar */
+    .top-progress{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--primary),var(--primary-600));width:0;z-index:9999;transition:width .3s ease}
+
+    /* Plate Number Input */
+    .plate-input-container{display:flex;gap:1.5rem;align-items:center;background:linear-gradient(135deg,var(--soft),#f1f5f9);border:2px solid var(--line);border-radius:16px;padding:1.5rem;box-shadow:0 4px 12px rgba(0,0,0,.05)}
+    .plate-visual{flex-shrink:0;position:relative}
+    .plate-display{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;background:linear-gradient(145deg,#ffffff,#f8fafc);border:4px solid #2c5530;border-radius:16px;padding:16px;width:160px;height:80px;box-shadow:0 8px 25px rgba(0,0,0,.2),inset 0 2px 4px rgba(255,255,255,.8);position:relative;transform:perspective(1000px) rotateX(5deg)}
+    .plate-display::before{content:'المملكة العربية السعودية';position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#2c5530,#1e3a21);color:#fff;padding:4px 12px;border-radius:8px;font-size:0.65rem;font-weight:700;letter-spacing:0.5px;box-shadow:0 2px 6px rgba(0,0,0,.3)}
+    .plate-display::after{content:'🇸🇦';position:absolute;bottom:-8px;right:8px;font-size:1.2rem;filter:drop-shadow(0 2px 4px rgba(0,0,0,.3))}
+    .plate-section{display:flex;align-items:center;justify-content:center;background:linear-gradient(145deg,#ffffff,#f1f5f9);border:2px solid #e2e8f0;border-radius:8px;font-weight:900;font-size:1.3rem;color:#1a202c;min-height:48px;transition:all .4s cubic-bezier(0.4,0,0.2,1);box-shadow:0 3px 6px rgba(0,0,0,.1),inset 0 1px 2px rgba(255,255,255,.9)}
+    .plate-section:not(:last-child){background:linear-gradient(145deg,#ffffff,#f8fafc);color:#2d3748;border-color:#cbd5e1}
+    .plate-section:last-child{background:linear-gradient(145deg,#2c5530,#1e3a21);color:#fff;border-color:#2c5530;box-shadow:0 4px 12px rgba(44,85,48,.4),inset 0 1px 2px rgba(255,255,255,.2)}
+    .plate-section.filled{transform:scale(1.08) translateY(-2px);box-shadow:0 6px 15px rgba(0,0,0,.25),inset 0 1px 3px rgba(255,255,255,.9)}
+    .plate-section:last-child.filled{box-shadow:0 8px 20px rgba(44,85,48,.5),inset 0 1px 3px rgba(255,255,255,.3)}
+    .plate-inputs{display:flex;gap:1rem;flex:1;align-items:flex-end;flex-wrap:wrap}
+    .plate-letters-group,.plate-numbers-group{display:flex;flex-direction:column;gap:.3rem;flex:1;min-width:100px}
+    .plate-input-label{font-size:.8rem;font-weight:600;color:#2c5530;text-align:center;margin:0;padding:0 .5rem;background:linear-gradient(135deg,rgba(44,85,48,.1),rgba(44,85,48,.05));border-radius:6px;border:1px solid rgba(44,85,48,.2);box-shadow:0 1px 3px rgba(44,85,48,.1)}
+    .plate-select{flex:1;min-width:70px;text-align:center;font-weight:700;border:2px solid #2c5530;border-radius:10px;padding:.6rem;background:linear-gradient(145deg,#ffffff,#f8fafc);transition:all .4s cubic-bezier(0.4,0,0.2,1);box-shadow:0 3px 8px rgba(44,85,48,.1),inset 0 1px 2px rgba(255,255,255,.9)}
+    .plate-select:focus{border-color:#1e3a21;box-shadow:0 0 0 4px rgba(44,85,48,.15),0 4px 12px rgba(44,85,48,.2);outline:none;transform:translateY(-2px)}
+    .plate-select:hover{border-color:#1e3a21;transform:translateY(-1px);box-shadow:0 4px 10px rgba(44,85,48,.15)}
+    .plate-numbers{flex:1.5;min-width:120px;text-align:center;font-weight:700;font-size:1.3rem;border:2px solid #2c5530;border-radius:10px;padding:.6rem;background:linear-gradient(145deg,#ffffff,#f8fafc);transition:all .4s cubic-bezier(0.4,0,0.2,1);box-shadow:0 3px 8px rgba(44,85,48,.1),inset 0 1px 2px rgba(255,255,255,.9)}
+    .plate-numbers:focus{border-color:#1e3a21;box-shadow:0 0 0 4px rgba(44,85,48,.15),0 4px 12px rgba(44,85,48,.2);outline:none;transform:translateY(-2px)}
+    .plate-numbers:hover{border-color:#1e3a21;transform:translateY(-1px);box-shadow:0 4px 10px rgba(44,85,48,.15)}
+    .plate-numbers::placeholder{color:#718096;font-size:1.1rem;font-weight:600}
+    
+    /* Plate label */
+    .plate-label{position:absolute;top:-12px;right:12px;background:linear-gradient(135deg,#2c5530,#1e3a21);color:#fff;padding:.4rem .8rem;border-radius:8px;font-size:.75rem;font-weight:800;letter-spacing:.8px;box-shadow:0 4px 8px rgba(44,85,48,.4);border:1px solid rgba(255,255,255,.2)}
+    
+    /* Plate animations */
+    @keyframes plateGlow {
+      0%, 100% { box-shadow: 0 8px 25px rgba(0,0,0,.2),inset 0 2px 4px rgba(255,255,255,.8); }
+      50% { box-shadow: 0 12px 35px rgba(44,85,48,.3),inset 0 2px 4px rgba(255,255,255,.9); }
+    }
+    
+    .plate-display:hover {
+      animation: plateGlow 2.5s ease-in-out infinite;
+      transform: perspective(1000px) rotateX(5deg) scale(1.02);
+    }
+    
+    /* Plate section pulse animation */
+    @keyframes platePulse {
+      0% { transform: scale(1) translateY(0); }
+      50% { transform: scale(1.08) translateY(-3px); }
+      100% { transform: scale(1.08) translateY(-2px); }
+    }
+    
+    .plate-section.filled {
+      animation: platePulse 0.4s cubic-bezier(0.4,0,0.2,1);
+    }
+    
+    /* New shine effect */
+    @keyframes plateShine {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+    
+    .plate-display::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.4), transparent);
+      animation: plateShine 3s ease-in-out infinite;
+      pointer-events: none;
+      z-index: 1;
+    }
+    
+    /* Saudi Plate Design */
+     .saudi-plate{ 
+       display:grid; 
+       grid-template-columns: 46px 1fr; 
+       background:#fff; 
+       border:4px solid #111; 
+       border-radius:16px; 
+       box-shadow:0 8px 25px rgba(0,0,0,.2), inset 0 2px 4px rgba(255,255,255,.8); 
+       width: min(520px, 100%); 
+       min-height: 120px; 
+       position:relative; 
+     } 
+     
+     .plate-band{ 
+       background: linear-gradient(180deg,#0a6,#078); 
+       color:#fff; 
+       display:flex; 
+       flex-direction:column; 
+       justify-content:center; 
+       align-items:center; 
+       gap:6px; 
+       border-inline-end:4px solid #111; 
+       border-top-left-radius:12px; 
+       border-bottom-left-radius:12px; 
+     } 
+     .band-ksa{ font-weight:900; letter-spacing:1px; } 
+     .band-icon{ font-size:18px; line-height:1; filter:drop-shadow(0 1px 1px rgba(0,0,0,.3)); } 
+     
+     .plate-cells{ 
+       display:grid; 
+       grid-template-columns: repeat(4, 1fr) 8px repeat(3, 1fr); 
+       gap:6px; 
+       padding:12px; 
+     } 
+     .divider{ background:#111; border-radius:2px; } 
+     
+     .cell{ 
+       border:2px solid #111; 
+       border-radius:10px; 
+       background: linear-gradient(145deg,#ffffff,#f8fafc); 
+       display:flex; flex-direction:column; justify-content:center; align-items:center; 
+       padding:6px 0; 
+       min-height: 72px; 
+     } 
+     .cell .ar{ font-size:28px; font-weight:900; color:#111; line-height:1; } 
+     .cell .en{ font-size:16px; font-weight:800; color:#1f2937; line-height:1; margin-top:6px; opacity:.95; } 
+     
+     .cell.filled{ box-shadow:0 6px 15px rgba(0,0,0,.18), inset 0 1px 2px rgba(255,255,255,.9); transform: translateY(-1px); transition:.2s; }
+    
+    /* Plate guide */
+    .plate-guide{display:flex;justify-content:space-between;margin-top:.5rem;padding:0 .5rem}
+    .guide-item{font-size:.7rem;color:#718096;font-weight:500;text-align:center;opacity:.8;transition:opacity .3s ease}
+    .plate-visual:hover .guide-item{opacity:1;color:#2c5530}
+    
+    /* لمعان خفيف دون تعارض مع أي ::after آخر */ 
+     .saudi-plate::before{ 
+       content:''; 
+       position:absolute; inset:0; 
+       background:linear-gradient(90deg, transparent, rgba(255,255,255,.35), transparent); 
+       transform: translateX(-100%); 
+       animation: shine 3.2s ease-in-out infinite; 
+       pointer-events:none; border-radius:12px; 
+     } 
+     @keyframes shine{ 0%{transform:translateX(-100%)} 100%{transform:translateX(100%)} }
+
+     /* مدخل لوحة بسيط inline بلا تأثيرات */ 
+     .plate-inline { gap:.5rem; } 
+     .plate-inline .form-select { min-width:90px; } 
+     .plate-inline .form-control { max-width:150px; } 
+
+     @media (max-width: 576px){ 
+       .plate-inline { flex-wrap: wrap; } 
+       .plate-inline .form-select, 
+       .plate-inline .form-control { flex:1 1 30%; min-width:120px; } 
+     }
+    
+    @media (max-width: 768px){ 
+       .plate-input-container{flex-direction:column;gap:1.5rem;padding:1.2rem}
+       .plate-visual{margin-bottom:1.5rem}
+       .saudi-plate{ min-height:100px; } 
+       .cell{ min-height:64px; } 
+       .cell .ar{ font-size:24px; } 
+       .cell .en{ font-size:14px; } 
+       .plate-inputs{width:100%;flex-direction:column;gap:1rem;align-items:stretch}
+       .plate-letters-group,.plate-numbers-group{min-width:100%;max-width:100%}
+       .plate-select,.plate-numbers{width:100%;min-width:auto;font-size:1.1rem;padding:.8rem}
+       .plate-input-label{font-size:.9rem;padding:.3rem .6rem}
+       .plate-guide{padding:0 1rem}
+       .guide-item{font-size:.75rem}
+     }
+
+        /* شكل اللوحة السعودية بصفين */
+        .ksa-plate-flat {
+            display: grid;
+            grid-template-columns: 1fr 48px;
+            max-width: 560px;
+            background: #fff;
+            border: 4px solid #111;
+            border-radius: 14px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+        
+        .ksa-plate-cells {
+            display: grid;
+            grid-auto-rows: minmax(60px, 1fr);
+        }
+        
+        .ksa-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: center;
+        }
+        
+        .ksa-en {
+            border-top: 2px solid #111;
+        }
+        
+        .ksa-row .ksa-letters {
+            border-inline-start: 2px solid #111;
+        }
+        
+        .ksa-nums, .ksa-letters {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 10px;
+            font-family: "Cairo", system-ui, sans-serif;
+            font-weight: 900;
+            color: #111;
+        }
+        
+        .ksa-ar .ksa-nums, .ksa-ar .ksa-letters {
+            font-size: 26px;
+        }
+        
+        .ksa-en .ksa-nums, .ksa-en .ksa-letters {
+            font-size: 22px;
+            letter-spacing: 2px;
+        }
+        
+        .ksa-band {
+            background: #0a6ca8;
+            color: #fff;
+            border-left: 4px solid #111;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            font-weight: 900;
+            font-size: 12px;
+            letter-spacing: 1px;
+        }
+        
+        @media (max-width: 576px) {
+            .ksa-plate-flat {
+                max-width: 100%;
+            }
+            
+            .ksa-ar .ksa-nums, .ksa-ar .ksa-letters {
+                font-size: 22px;
+            }
+            
+            .ksa-en .ksa-nums, .ksa-en .ksa-letters {
+                font-size: 18px;
+            }
+        } 
+  </style>
+</head>
+<body>
+
+<!-- Header -->
+<nav class="booking-header">
+  <div class="container">
+    <div class="header-content">
+      <div class="logo-section">
+        <a href="index.php" class="logo-link">
+          <img src="https://i.postimg.cc/ZKC5781D/2025-07-04-082630.png" class="logo-img" alt="شعار سلامة">
+        </a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- Menu -->
+<section class="MenuSec">
+  <div class="menu-nav container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light rounded">
+      <div class="container-fluid">
+        <div class="collapse navbar-collapse justify-content-center" id="navbarSupportedContent">
+          <ul class="navbar-nav gap-2">
+            <li class="nav-item"><a class="nav-link" href="index.php"><i class="fas fa-home"></i> الرئيسية</a></li>
+            <li class="nav-item"><a class="nav-link" href="#">بنود الفحص الفني الدوري</a></li>
+            <li class="nav-item"><a class="nav-link active fw-bold" href="booking.php">حجز موعد</a></li>
+            <li class="nav-item"><a class="nav-link" href="booking-summary.php">ملخص الحجز</a></li>
+            <li class="nav-item"><a class="nav-link" href="#">تعديل موعد</a></li>
+            <li class="nav-item"><a class="nav-link" href="#">إلغاء موعد</a></li>
+            <li class="nav-item"><a class="nav-link" href="#">التحقق من حالة الفحص</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </div>
+</section>
+
+<!-- Title -->
+<section class="title new-date pt-3">
+  <div class="container">
+    <p class="lin-1">خدمة الفحص</p>
+    <p class="lin-2"><span>الفني</span> الدوري</p>
+    <p class="lin-3 pt-2">حجز موعد</p>
+  </div>
+</section>
+
+<!-- Main -->
+<main>
+  <div class="container">
+
+    <?php if (isset($_SESSION['booking_errors'])): ?>
+    <div class="alert alert-danger p-4 rounded" style="background: #f8d7da; border: 1px solid #f5c6cb; color: #721c24; margin-bottom: 2rem;">
+      <h6 class="fw-bold mb-3">يرجى تصحيح الأخطاء التالية:</h6>
+      <div class="m-0">
+        <?php foreach ($_SESSION['booking_errors'] as $error): ?>
+          <div class="mb-2"><?= $error ?></div>
+        <?php endforeach; ?>
+      </div>
+      <div class="mt-3">
+        <a href="?debug=1" class="btn btn-outline-danger btn-sm" style="color: #721c24; border-color: #721c24;">
+          <i class="fas fa-bug me-1"></i> للتشخيص: اضغط هنا لرؤية تفاصيل الخطأ
+        </a>
+      </div>
+    </div>
+    <?php unset($_SESSION['booking_errors']); ?>
+    <?php endif; ?>
+
+    <?php if (isset($_GET['debug']) && $_GET['debug'] == '1'): ?>
+      <div style="background:#f8f9fa;border:1px solid #dee2e6;border-radius:8px;padding:1rem;margin:1rem 0;font-family:monospace;font-size:0.9rem">
+        <h6 style="color:#495057;margin-bottom:0.5rem">بيانات التشخيص:</h6>
+        <p><strong>حالة قاعدة البيانات:</strong> 
+          <?php 
+          try {
+            require_once 'db.php';
+            echo isset($pdo) ? '✅ متصلة' : '❌ غير متصلة';
+          } catch (Exception $e) {
+            echo '❌ خطأ في الاتصال: ' . htmlspecialchars($e->getMessage());
+          }
+          ?>
+        </p>
+        <p><strong>بيانات الجلسة:</strong></p>
+        <pre style="margin:0;white-space:pre-wrap;word-wrap:break-word"><?= htmlspecialchars(print_r($_SESSION, true)) ?></pre>
+        <p><strong>بيانات POST:</strong></p>
+        <pre style="margin:0;white-space:pre-wrap;word-wrap:break-word"><?= htmlspecialchars(print_r($_POST, true)) ?></pre>
+      </div>
+    <?php endif; ?>
+
+    <div class="booking-form">
+      <h5 class="section-title">المعلومات الشخصية</h5>
+
+      <form id="bookingForm" method="post" action="process-booking.php" novalidate>
+        <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf'] ?? '') ?>">
+
+        <div class="row">
+          <div class="mb-3 col-md-6">
+            <label for="first_name" class="form-label">الاسم<sub>*</sub></label>
+            <input type="text" class="form-control" id="first_name" name="first_name" placeholder="ادخل الاسم" value="<?= htmlspecialchars($_SESSION['booking_data']['first_name'] ?? '') ?>" required>
+            <div class="validation-feedback text-danger"></div>
+          </div>
+          <div class="mb-3 col-md-6">
+            <label for="national_id" class="form-label">رقم الهوية / الإقامة<sub>*</sub></label>
+            <input type="text" class="form-control" id="national_id" name="national_id" placeholder="10 أرقام" value="<?= htmlspecialchars($_SESSION['booking_data']['national_id'] ?? '') ?>" required>
+            <div class="validation-feedback text-danger"></div>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="phone" class="form-label d-block">رقم الجوال<sub>*</sub></label>
+          <div class="input-group">
+            <input type="text" class="form-control text-start" id="phone" name="phone" placeholder="05xxxxxxxx" value="<?= htmlspecialchars($_SESSION['booking_data']['phone'] ?? '') ?>" required>
+            <select id="SelectCountryCode" class="form-select" style="max-width:110px">
+              <option value="966" selected>966</option>
+              <option value="964">964</option>
+              <option value="961">961</option>
+            </select>
+          </div>
+          <div class="validation-feedback text-danger"></div>
+        </div>
+
+        <div class="mb-3">
+          <label for="email" class="form-label">البريد الإلكتروني</label>
+          <input type="email" class="form-control text-start" id="email" name="email" placeholder="email@example.com" value="<?= htmlspecialchars($_SESSION['booking_data']['email'] ?? '') ?>">
+          <div class="validation-feedback text-danger"></div>
+        </div>
+
+        <!-- Vehicle Info -->
+        <h5 class="section-title">بيانات المركبة</h5>
+
+        <div class="row">
+          <div class="mb-3 col-md-6">
+            <label for="vehicle_type" class="form-label">نوع المركبة<sub>*</sub></label>
+            <select id="vehicle_type" name="vehicle_type" class="form-control" required>
+              <option value="">اختر نوع المركبة</option>
+              <option value="private"     <?= (($_SESSION['booking_data']['vehicle_type'] ?? '')==='private'?'selected':'') ?>>🚗 مركبة خاصة</option>
+              <option value="light_bus"   <?= (($_SESSION['booking_data']['vehicle_type'] ?? '')==='light_bus'?'selected':'') ?>>🚐 حافلة صغيرة</option>
+              <option value="light_truck" <?= (($_SESSION['booking_data']['vehicle_type'] ?? '')==='light_truck'?'selected':'') ?>>🚚 نقل خفيف</option>
+              <option value="heavy_truck" <?= (($_SESSION['booking_data']['vehicle_type'] ?? '')==='heavy_truck'?'selected':'') ?>>🚛 نقل ثقيل</option>
+              <option value="motorcycle"  <?= (($_SESSION['booking_data']['vehicle_type'] ?? '')==='motorcycle'?'selected':'') ?>>🏍️ دراجة نارية</option>
+              <option value="van"         <?= (($_SESSION['booking_data']['vehicle_type'] ?? '')==='van'?'selected':'') ?>>🚐 فان</option>
+              <option value="pickup"      <?= (($_SESSION['booking_data']['vehicle_type'] ?? '')==='pickup'?'selected':'') ?>>🛻 بيك أب</option>
+            </select>
+            <div class="validation-feedback text-danger"></div>
+          </div>
+          <div class="mb-3 col-md-6">
+            <label for="vehicle_make" class="form-label">بلد التسجيل<sub>*</sub></label>
+            <select class="form-control" id="vehicle_make" name="vehicle_make" required>
+              <option value="">اختر بلد التسجيل</option>
+              <option value="السعودية" <?= (($_SESSION['booking_data']['vehicle_make'] ?? '')==='السعودية'?'selected':'') ?>>🇸🇦 المملكة العربية السعودية</option>
+              <option value="الإمارات" <?= (($_SESSION['booking_data']['vehicle_make'] ?? '')==='الإمارات'?'selected':'') ?>>🇦🇪 دولة الإمارات العربية المتحدة</option>
+              <option value="الكويت" <?= (($_SESSION['booking_data']['vehicle_make'] ?? '')==='الكويت'?'selected':'') ?>>🇰🇼 دولة الكويت</option>
+              <option value="قطر" <?= (($_SESSION['booking_data']['vehicle_make'] ?? '')==='قطر'?'selected':'') ?>>🇶🇦 دولة قطر</option>
+              <option value="البحرين" <?= (($_SESSION['booking_data']['vehicle_make'] ?? '')==='البحرين'?'selected':'') ?>>🇧🇭 مملكة البحرين</option>
+              <option value="عمان" <?= (($_SESSION['booking_data']['vehicle_make'] ?? '')==='عمان'?'selected':'') ?>>🇴🇲 سلطنة عمان</option>
+              <option value="الأردن" <?= (($_SESSION['booking_data']['vehicle_make'] ?? '')==='الأردن'?'selected':'') ?>>🇯🇴 المملكة الأردنية الهاشمية</option>
+              <option value="لبنان" <?= (($_SESSION['booking_data']['vehicle_make'] ?? '')==='لبنان'?'selected':'') ?>>🇱🇧 الجمهورية اللبنانية</option>
+              <option value="العراق" <?= (($_SESSION['booking_data']['vehicle_make'] ?? '')==='العراق'?'selected':'') ?>>🇮🇶 جمهورية العراق</option>
+              <option value="مصر" <?= (($_SESSION['booking_data']['vehicle_make'] ?? '')==='مصر'?'selected':'') ?>>🇪🇬 جمهورية مصر العربية</option>
+              <option value="أخرى" <?= (($_SESSION['booking_data']['vehicle_make'] ?? '')==='أخرى'?'selected':'') ?>>🌍 دولة أخرى</option>
+            </select>
+            <div class="validation-feedback text-danger"></div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="mb-3 col-md-6">
+            <div class="mb-3"> 
+              <label for="plate_numbers" class="form-label">رقم اللوحة<sub>*</sub></label> 
+
+              <div class="input-group plate-inline"> 
+                <!-- الحروف: ثلاثة اختيارات في سطر واحد --> 
+                <select class="form-select text-center" id="plate_letter1" name="plate_letter1" aria-label="الحرف الأول"> 
+                  <option value="">حرف 1</option> 
+                  <!-- سيُعاد ملؤها بالـ JS لضمان الحروف المسموحة فقط --> 
+                </select> 
+
+                <select class="form-select text-center" id="plate_letter2" name="plate_letter2" aria-label="الحرف الثاني"> 
+                  <option value="">حرف 2</option> 
+                </select> 
+
+                <select class="form-select text-center" id="plate_letter3" name="plate_letter3" aria-label="الحرف الثالث"> 
+                  <option value="">حرف 3</option> 
+                </select> 
+
+                <!-- الأرقام: 1–4 --> 
+                <input type="text" class="form-control text-center" id="plate_numbers" name="plate_numbers" 
+                       placeholder="أرقام (1–4)" maxlength="4" inputmode="numeric" pattern="[0-9٠-٩]{1,4}" value="<?= htmlspecialchars($_SESSION['booking_data']['plate_numbers'] ?? '') ?>"> 
+              </div> 
+
+              <!-- قيم خفية: النص المقروء + نسخة معيارية 3 أحرف + 4 أرقام --> 
+              <input type="hidden" id="plate_number" name="plate_number" value="<?= htmlspecialchars($_SESSION['booking_data']['plate_number'] ?? '') ?>"> 
+              <input type="hidden" id="plate_number_norm" name="plate_number_norm" value="<?= htmlspecialchars($_SESSION['booking_data']['plate_number_norm'] ?? '') ?>"> 
+
+              <div class="validation-feedback text-danger"></div> 
+              
+              <!-- معاينة اللوحة السعودية (صفين) -->
+              <div class="ksa-plate-flat" id="ksaPlate">
+                <div class="ksa-plate-cells">
+                  <!-- الصف العلوي (عربي) -->
+                  <div class="ksa-row ksa-ar" dir="rtl">
+                    <div class="ksa-nums" id="pvArNums">٠٠٠٠</div>
+                    <div class="ksa-letters" id="pvArLetters">ا ب د</div>
+                  </div>
+                  <!-- الصف السفلي (لاتيني) -->
+                  <div class="ksa-row ksa-en" dir="ltr">
+                    <div class="ksa-nums" id="pvEnNums">0000</div>
+                    <div class="ksa-letters" id="pvEnLetters">R X B</div>
+                  </div>
+                </div>
+                <div class="ksa-band" aria-hidden="true"><span>KSA</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="mb-3 col-md-6">
+            <label for="vehicle_year" class="form-label">سنة الصنع<sub>*</sub></label>
+            <select class="form-control" id="vehicle_year" name="vehicle_year" required>
+              <option value="">اختر السنة</option>
+              <?php for($year = date('Y'); $year >= 1990; $year--): ?>
+                <option value="<?= $year ?>" <?= (isset($_SESSION['booking_data']['vehicle_year']) && $_SESSION['booking_data']['vehicle_year'] == $year) ? 'selected' : '' ?>><?= $year ?></option>
+              <?php endfor; ?>
+            </select>
+            <div class="validation-feedback text-danger"></div>
+          </div>
+        </div>
+
+        <!-- Service Center -->
+        <h5 class="section-title">مركز الخدمة</h5>
+
+        <div class="row">
+          <div class="mb-3 col-md-6">
+            <label for="inspection_type" class="form-label">نوع الفحص<sub>*</sub></label>
+            <select class="form-control" id="inspection_type" name="inspection_type" required>
+              <option value="">اختر نوع الفحص</option>
+              <option value="technical_inspection" <?= (($_SESSION['booking_data']['inspection_type'] ?? '')==='technical_inspection'?'selected':'') ?>>🔧 فحص فني</option>
+              <option value="re_inspection" <?= (($_SESSION['booking_data']['inspection_type'] ?? '')==='re_inspection'?'selected':'') ?>>🔄 إعادة الفحص الفني</option>
+            </select>
+            <div class="validation-feedback text-danger"></div>
+          </div>
+          <div class="mb-3 col-md-6">
+            <label for="branch" class="form-label">المنطقة<sub>*</sub></label>
+            <select class="form-control" id="branch" name="branch" required>
+              <option value="">اختر المنطقة</option>
+              <option value="riyadh" <?= (($_SESSION['booking_data']['branch'] ?? '')==='riyadh'?'selected':'') ?>>🏛️ منطقة الرياض</option>
+              <option value="makkah" <?= (($_SESSION['booking_data']['branch'] ?? '')==='makkah'?'selected':'') ?>>🕋 منطقة مكة المكرمة</option>
+              <option value="madinah" <?= (($_SESSION['booking_data']['branch'] ?? '')==='madinah'?'selected':'') ?>>🕌 منطقة المدينة المنورة</option>
+              <option value="eastern" <?= (($_SESSION['booking_data']['branch'] ?? '')==='eastern'?'selected':'') ?>>🏭 المنطقة الشرقية</option>
+              <option value="asir" <?= (($_SESSION['booking_data']['branch'] ?? '')==='asir'?'selected':'') ?>>🏔️ منطقة عسير</option>
+              <option value="tabuk" <?= (($_SESSION['booking_data']['branch'] ?? '')==='tabuk'?'selected':'') ?>>🏜️ منطقة تبوك</option>
+              <option value="hail" <?= (($_SESSION['booking_data']['branch'] ?? '')==='hail'?'selected':'') ?>>🌾 منطقة حائل</option>
+              <option value="northern" <?= (($_SESSION['booking_data']['branch'] ?? '')==='northern'?'selected':'') ?>>🏕️ منطقة الحدود الشمالية</option>
+              <option value="jazan" <?= (($_SESSION['booking_data']['branch'] ?? '')==='jazan'?'selected':'') ?>>🌴 منطقة جازان</option>
+              <option value="najran" <?= (($_SESSION['booking_data']['branch'] ?? '')==='najran'?'selected':'') ?>>🏛️ منطقة نجران</option>
+              <option value="bahah" <?= (($_SESSION['booking_data']['branch'] ?? '')==='bahah'?'selected':'') ?>>🌲 منطقة الباحة</option>
+              <option value="jouf" <?= (($_SESSION['booking_data']['branch'] ?? '')==='jouf'?'selected':'') ?>>🏺 منطقة الجوف</option>
+              <option value="qassim" <?= (($_SESSION['booking_data']['branch'] ?? '')==='qassim'?'selected':'') ?>>🌾 منطقة القصيم</option>
+            </select>
+            <div class="validation-feedback text-danger"></div>
+          </div>
+          <div class="mb-3 col-md-6">
+            <label for="appointment_date" class="form-label">تاريخ الموعد<sub>*</sub></label>
+            <input type="date" class="form-control" id="appointment_date" name="appointment_date" value="<?= htmlspecialchars($_SESSION['booking_data']['appointment_date'] ?? '') ?>" required>
+            <div class="validation-feedback text-danger"></div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="mb-3 col-md-6">
+            <label for="appointment_time" class="form-label">الوقت المفضل<sub>*</sub></label>
+            <select id="appointment_time" name="appointment_time" class="form-control" required>
+              <option value="">اختر الوقت</option>
+              <?php
+                $times = ['08:00'=>'8:00 ص','09:00'=>'9:00 ص','10:00'=>'10:00 ص','11:00'=>'11:00 ص','14:00'=>'2:00 م','15:00'=>'3:00 م','16:00'=>'4:00 م','17:00'=>'5:00 م'];
+                $savedTime = $_SESSION['booking_data']['appointment_time'] ?? '';
+                foreach ($times as $val=>$label):
+              ?>
+                <option value="<?= $val ?>" <?= ($savedTime===$val?'selected':'') ?>><?= $label ?></option>
+              <?php endforeach; ?>
+            </select>
+            <div class="validation-feedback text-danger"></div>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-secondary btn-full mt-3">
+          <i class="fas fa-arrow-left"></i>
+          متابعة
+        </button>
+      </form>
+    </div>
+  </div>
+</main>
+
+<!-- Footer -->
+<footer>
+  <p class="m-0">© <?php echo date('Y'); ?> سلامة. جميع الحقوق محفوظة.</p>
+</footer>
+
+<div class="top-progress" id="topProgress"></div>
+
+<!-- Bootstrap Bundle (JS) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Connection Tracker -->
+<script>
+  // تمرير بيانات الحجز لتتبع الاتصال
+  window.bookingId = <?php echo json_encode($_SESSION['booking_id'] ?? 'null'); ?>;
+  window.phone = <?php echo json_encode($_POST['phone'] ?? $_SESSION['phone'] ?? 'null'); ?>;
+</script>
+<script src="js/connection-tracker.js"></script>
+
+<script>
+(function(){
+  const form = document.getElementById('bookingForm');
+  if (!form) return;
+
+  // Elements
+  const countryCode = document.getElementById('SelectCountryCode');
+  const phoneField  = document.getElementById('phone');
+  const emailField  = document.getElementById('email');
+  const plateField  = document.getElementById('plate_number');
+  const plateLetter1 = document.getElementById('plate_letter1');
+  const plateLetter2 = document.getElementById('plate_letter2');
+  const plateLetter3 = document.getElementById('plate_letter3');
+  const plateNumbers = document.getElementById('plate_numbers');
+  const idField     = document.getElementById('national_id');
+  const vehicleType = document.getElementById('vehicle_type');
+  const branchSel   = document.getElementById('branch');
+  const dateField   = document.getElementById('appointment_date');
+  const timeField   = document.getElementById('appointment_time');
+  const yearField   = document.getElementById('vehicle_year');
+  const makeField   = document.getElementById('vehicle_make');
+  const inspectionType = document.getElementById('inspection_type');
+  const progressBar = document.getElementById('topProgress');
+
+  // Mappings
+  const prices = {
+    private: '115', light_bus: '115', light_truck: '115',
+    heavy_truck: '235.75', motorcycle: '100', van: '180', pickup: '170'
+  };
+  const vehicleNames = {
+    private:'مركبة خاصة', light_bus:'حافلة صغيرة', light_truck:'نقل خفيف',
+    heavy_truck:'نقل ثقيل', motorcycle:'دراجة نارية', van:'فان', pickup:'بيك أب'
+  };
+  const branchNames = {
+    riyadh:'منطقة الرياض', makkah:'منطقة مكة المكرمة', madinah:'منطقة المدينة المنورة',
+    eastern:'المنطقة الشرقية', asir:'منطقة عسير', tabuk:'منطقة تبوك',
+    hail:'منطقة حائل', northern:'منطقة الحدود الشمالية', jazan:'منطقة جازان',
+    najran:'منطقة نجران', bahah:'منطقة الباحة', jouf:'منطقة الجوف', qassim:'منطقة القصيم'
+  };
+
+  // Min date = today
+  const todayISO = new Date().toISOString().split('T')[0];
+  dateField.setAttribute('min', todayISO);
+
+  // Helpers
+  function setFeedback(field, ok, msg){
+    const box = field.closest('.mb-3, .form-group, .input-group')?.parentElement?.querySelector('.validation-feedback')
+              || field.closest('.mb-3, .form-group')?.querySelector('.validation-feedback')
+              || field.parentElement.querySelector('.validation-feedback');
+    if (box) { box.textContent = msg || ''; box.classList.toggle('text-danger', !ok); box.classList.toggle('text-success', !!ok); }
+    field.classList.toggle('error', !ok);
+    field.classList.toggle('valid', !!ok);
+  }
+
+  // Show individual field errors from server
+  function showFieldErrors() {
+    const errors = <?= json_encode($_SESSION['booking_errors'] ?? []) ?>;
+    if (errors.length === 0) return;
+
+    // Map error messages to field names
+    const fieldErrorMap = {
+      'الاسم مطلوب (حرفان على الأقل).': 'first_name',
+      'رقم الهوية/الإقامة يجب أن يكون 10 أرقام.': 'national_id',
+      'رقم الجوال غير صحيح.': 'phone',
+      'البريد الإلكتروني غير صحيح.': 'email',
+      'نوع المركبة مطلوب.': 'vehicle_type',
+      'بلد التسجيل مطلوب.': 'vehicle_make',
+      'رقم اللوحة مطلوب.': 'plate_number',
+      'سنة المركبة مطلوبة.': 'vehicle_year',
+      'نوع الفحص مطلوب.': 'inspection_type',
+      'المنطقة مطلوبة.': 'branch',
+      'تاريخ الموعد مطلوب.': 'appointment_date',
+      'وقت الموعد مطلوب.': 'appointment_time'
+    };
+
+    errors.forEach(error => {
+      const fieldName = fieldErrorMap[error];
+      if (fieldName) {
+        const field = document.getElementById(fieldName);
+        if (field) {
+          setFeedback(field, false, error);
+        }
+      }
+    });
+  }
+
+  // Run on page load
+  document.addEventListener('DOMContentLoaded', showFieldErrors);
+
+  function validPhoneByCountry(){
+    const cc = countryCode.value;
+    const v = phoneField.value.trim();
+    if (!v) return false;
+    if (cc === '966') return /^05\d{8}$/.test(v);           // SA: 05xxxxxxxx
+    return /^\d{8,12}$/.test(v);                            // others: 8-12 digits
+  }
+
+
+  function updateProgress(){
+    // Count required completeness (handles radios/selects/inputs)
+    const reqs = Array.from(form.querySelectorAll('[required]'));
+    let done = 0;
+    const seenRadio = new Set();
+    reqs.forEach(f=>{
+      if (f.type==='radio'){
+        if (seenRadio.has(f.name)) return;
+        seenRadio.add(f.name);
+        if (form.querySelector(`input[name="${f.name}"]:checked`)) done++;
+      } else if (f.tagName==='SELECT'){
+        if (f.value) done++;
+      } else {
+        if (f.value.trim()) done++;
+      }
+    });
+    const pct = Math.round((done / (new Set(reqs.map(f=>f.name||f.id)).size)) * 100);
+    progressBar.style.width = Math.min(100, pct) + '%';
+  }
+
+  // Listeners: validation
+  countryCode.addEventListener('change', ()=>{ phoneField.placeholder = (countryCode.value==='966'?'05xxxxxxxx':'رقم الجوال'); if (phoneField.value) phoneField.dispatchEvent(new Event('input')); });
+  phoneField.addEventListener('input', ()=>{
+    // Auto-format SA to start with 05
+    if (countryCode.value==='966'){
+      let v = phoneField.value.replace(/\D/g,'');
+      if (!v.startsWith('05')) v = '05' + v.replace(/^0+/, '');
+      phoneField.value = v.slice(0,10);
+    } else {
+      phoneField.value = phoneField.value.replace(/\D/g,'').slice(0,12);
+    }
+    setFeedback(phoneField, validPhoneByCountry(), validPhoneByCountry() ? '' : (countryCode.value==='966'?'رقم الجوال يجب أن يبدأ بـ 05 ويحتوي على 10 أرقام':'أدخل رقمًا صحيحًا (8–12 رقم)'));
+  });
+  phoneField.addEventListener('blur', ()=>setFeedback(phoneField, validPhoneByCountry(), validPhoneByCountry()? '':''));
+  emailField.addEventListener('input', ()=>{
+    const ok = !emailField.value || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailField.value);
+    setFeedback(emailField, ok, ok?'':'البريد الإلكتروني غير صحيح');
+  });
+  // Plate number handling (حروف معتمدة + تطبيع + لاتيني)
+  const ALLOWED_AR = ['ا','ب','ح','د','ر','س','ص','ط','ع','ق','ك','ل','م','ن','ه','و','ى'];
+  // بعض الناس يكتب "ي" بدل "ى"؛ نعاملها كـ "ى"
+  const normalizeLetter = l => (l === 'ي' ? 'ى' : l);
+  
+  // خريطة الحروف العربية -> اللاتينية كما تُطبع على اللوحة
+  // (A,B,J,D,R,S,X,T,E,G,K,L,Z,N,H,U,V)
+  const LATIN_MAP = {
+    'ا':'A','ب':'B','ح':'J','د':'D','ر':'R','س':'S','ص':'X','ط':'T',
+    'ع':'E','ق':'G','ك':'K','ل':'L','م':'Z','ن':'N','ه':'H','و':'U','ى':'V','ي':'V'
+  };
+  
+  // تحويل الأرقام العربية ٠١٢٣٤٥٦٧٨٩ إلى 0123456789
+  const AR_NUM_MAP = {'٠':'0','١':'1','٢':'2','٣':'3','٤':'4','٥':'5','٦':'6','٧':'7','٨':'8','٩':'9'};
+  const toENdigits = s => s.replace(/[٠-٩]/g, ch => AR_NUM_MAP[ch] || ch);
+  
+  // بناء خيارات الحروف تلقائيًا لضمان القائمة المعتمدة فقط
+  [plateLetter1, plateLetter2, plateLetter3].forEach(sel => {
+    const current = normalizeLetter(sel.value || '');
+    sel.innerHTML = '<option value="">🔤 اختر الحرف</option>' +
+      ALLOWED_AR.map(l => `<option value="${l}">${l}</option>`).join('');
+    if (ALLOWED_AR.includes(current)) sel.value = current;
+  });
+  
+  function updatePlateDisplay() {
+    // تنظيف وإجبار القيم على المسموح
+    const letter1 = normalizeLetter(plateLetter1.value || '');
+    const letter2 = normalizeLetter(plateLetter2.value || '');
+    const letter3 = normalizeLetter(plateLetter3.value || '');
+  
+    // numbers: اسمح بإدخال 1–4 أرقام، حوّل العربية إلى إنجليزية، واحصر الطول
+    let numbersRaw = plateNumbers.value || '';
+    numbersRaw = toENdigits(numbersRaw).replace(/\D/g, '').slice(0, 4);
+    plateNumbers.value = numbersRaw; // يعكس التنظيف في الحقل
+  
+    // توليد القيم المخفية
+    // الشكل المقروء (كما أدخله المستخدم)
+    const fullPlate = `${letter1} ${letter2} ${letter3} ${numbersRaw}`.trim().replace(/\s+/g,' ');
+    plateField.value = fullPlate;
+  
+    // النسخة المعيارية: 3 حروف + 4 أرقام padded
+    const numbers4 = numbersRaw.padStart(4, '0');
+    document.getElementById('plate_number_norm').value = `${letter1}${letter2}${letter3}${numbers4}`;
+  
+    // التحقق
+    const lettersOK = [letter1,letter2,letter3].every(l => ALLOWED_AR.includes(l));
+    const numsOK    = numbersRaw.length >= 1; // نقبل 1–4 ثم نطبع داخليًا إلى 4
+    const isValid   = lettersOK && numsOK;
+  
+    setFeedback(plateNumbers, isValid, isValid ? '' : 'يرجى اختيار 3 حروف من القائمة المعتمدة وإدخال 1–4 أرقام');
+    return isValid;
+  }
+  
+  [plateLetter1, plateLetter2, plateLetter3].forEach(sel => sel.addEventListener('change', updatePlateDisplay));
+  plateNumbers.addEventListener('input', updatePlateDisplay);
+  idField.addEventListener('input', ()=>{
+    idField.value = idField.value.replace(/\D/g,'').slice(0,10);
+    const ok = /^[0-9]{10}$/.test(idField.value);
+    setFeedback(idField, ok, ok?'':'رقم الهوية/الإقامة يجب أن يكون 10 أرقام');
+  });
+  yearField.addEventListener('change', ()=>{
+    const y = parseInt(yearField.value || '0',10), cy = new Date().getFullYear();
+    const ok = y >= 1990 && y <= cy;
+    setFeedback(yearField, ok, ok?'':'السنة بين 1990 و '+cy);
+  });
+  [vehicleType, branchSel, dateField, timeField, makeField, inspectionType].forEach(el=>{
+    el.addEventListener('change', ()=>{ setFeedback(el, !!el.value, el.value?'':''); updateProgress(); });
+    el.addEventListener('input',  ()=>{ setFeedback(el, !!el.value, el.value?'':''); updateProgress(); });
+  });
+
+  // Initialize
+  (function init(){
+    dateField.setAttribute('min', todayISO);
+    updateProgress();
+
+    // Restore local autosave
+    try{
+      const saved = JSON.parse(localStorage.getItem('bookingFormData') || '{}');
+      Object.keys(saved).forEach(k=>{
+        const field = form.querySelector(`[name="${k}"]`);
+        if (field) field.value = saved[k];
+      });
+    }catch(_){}
+  })();
+
+  // Autosave
+  form.addEventListener('input', e=>{
+    if (!e.target.name) return;
+    const data = JSON.parse(localStorage.getItem('bookingFormData') || '{}');
+    data[e.target.name] = e.target.value;
+    localStorage.setItem('bookingFormData', JSON.stringify(data));
+  });
+
+  // Submit
+  const submitBtn = form.querySelector('button[type="submit"]');
+  form.addEventListener('submit', function(e){
+    // Basic required check
+    let ok = true;
+    const reqs = form.querySelectorAll('[required]');
+    reqs.forEach(f=>{
+      const valueOk = (f.tagName==='SELECT') ? !!f.value : !!f.value.trim();
+      if (!valueOk){ ok=false; setFeedback(f,false,'هذا الحقل مطلوب'); }
+    });
+    if (!validPhoneByCountry()){ ok=false; setFeedback(phoneField,false,'رقم الجوال غير صحيح'); }
+    if (emailField.value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailField.value)){ ok=false; setFeedback(emailField,false,'البريد الإلكتروني غير صحيح'); }
+    const plateValid = updatePlateDisplay(); // يعتمد المنطق الجديد + التطبيع
+    if (!plateValid){ ok=false; /* الرسالة تُدار داخل updatePlateDisplay */ }
+    if (!/^\d{10}$/.test(idField.value)){ ok=false; setFeedback(idField,false,'رقم الهوية/الإقامة غير صحيح'); }
+
+    if (!ok){
+      e.preventDefault();
+      const alert = document.createElement('div');
+      alert.className = 'alert alert-error p-3 rounded';
+      alert.innerHTML = '<strong>يرجى تصحيح الأخطاء ثم إعادة المحاولة.</strong>';
+      form.prepend(alert);
+      setTimeout(()=>alert.remove(), 4000);
+      const firstErr = form.querySelector('.form-control.error, select.error');
+      if (firstErr) firstErr.scrollIntoView({behavior:'smooth', block:'center'});
+      return;
+    }
+
+    // Lock submit + clear autosave
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'جاري المعالجة...';
+    localStorage.removeItem('bookingFormData');
+  });
+
+  // Progress bar hook
+  form.addEventListener('input', updateProgress);
+  form.addEventListener('change', updateProgress);
+
+  // ربط المعاينة بحقول الإدخال
+  (function(){
+    const l1 = document.getElementById('plate_letter1');
+    const l2 = document.getElementById('plate_letter2');
+    const l3 = document.getElementById('plate_letter3');
+    const nums = document.getElementById('plate_numbers');
+    
+    const pvArNums = document.getElementById('pvArNums');
+    const pvEnNums = document.getElementById('pvEnNums');
+    const pvArLetters = document.getElementById('pvArLetters');
+    const pvEnLetters = document.getElementById('pvEnLetters');
+    
+    if(!(l1 && l2 && l3 && nums && pvArNums && pvEnNums && pvArLetters && pvEnLetters)) return;
+    
+    // حروف معتمدة + تطبيع "ي" -> "ى"
+    const ALLOWED_AR = ['ا','ب','ح','د','ر','س','ص','ط','ع','ق','ك','ل','م','ن','ه','و','ى'];
+    const normY = ch => (ch === 'ي' ? 'ى' : ch);
+    
+    // تحويل الأرقام العربية ↔ الإنجليزية
+    const AR2EN = {'٠':'0','١':'1','٢':'2','٣':'3','٤':'4','٥':'5','٦':'6','٧':'7','٨':'8','٩':'9'};
+    const EN2AR = {'0':'٠','1':'١','2':'٢','3':'٣','4':'٤','5':'٥','6':'٦','7':'٧','8':'٨','9':'٩'};
+    const toEN = s => (s||'').replace(/[٠-٩]/g, d => AR2EN[d]||d).replace(/\D/g,'').slice(0,4);
+    const toAR = s => (s||'').replace(/[0-9]/g, d => EN2AR[d]||d);
+    
+    // خريطة ترميز اللوحات (مطابقة لصور KSA الشائعة)
+    const LATIN_MAP = {
+      'ا':'A','ب':'B','ح':'J','د':'D','ر':'R','س':'S','ص':'X','ط':'T',
+      'ع':'E','ق':'G','ك':'K','ل':'L','م':'Z','ن':'N','ه':'H','و':'U','ى':'V','ي':'V'
+    };
+    
+    function render(){
+      const L = [normY(l1.value||''), normY(l2.value||''), normY(l3.value||'')];
+      const N = toEN(nums.value||'');
+      
+      // الصف العلوي (عربي)
+      const lettersAr = L.filter(Boolean).join(' ');
+      pvArLetters.textContent = lettersAr || 'ا ب د';
+      pvArNums.textContent = toAR((N || '0000').padStart(4,'0'));
+      
+      // الصف السفلي (لاتيني) — الحروف تُعرض بالعكس لتطابق ترتيب الصورة
+      const lettersEn = L.map(ch => LATIN_MAP[ch]||'').reverse().filter(Boolean).join(' ');
+      pvEnLetters.textContent = lettersEn || 'R X B';
+      pvEnNums.textContent = (N || '0000').padStart(4,'0');
+    }
+    
+    [l1,l2,l3].forEach(el => el.addEventListener('change', render));
+    nums.addEventListener('input', render);
+    render();
+  })();
+
+})();
+</script>
+</body>
+</html>

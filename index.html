@@ -1,0 +1,478 @@
+<?php // index.php — الرئيسية المحسّنة ?>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>بوابة الفحص الفني للمركبات</title>
+
+  <!-- Meta -->
+  <meta name="description" content="بوابة الفحص الفني للمركبات. احجز موعدك وتعرّف على الخدمات والأسعار وتواصل معنا لضمان سلامة مركبتك." />
+  <meta property="og:title" content="الفحص الفني للمركبات" />
+  <meta property="og:description" content="احجز موعد الفحص الفني وتعرّف على خدماتنا وأسعارنا." />
+  <meta property="og:type" content="website" />
+  <meta name="theme-color" content="#0ea5a5" />
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --primary:#0ea5a5; --primary-600:#0c8e8e;
+      --ink:#0f172a; --muted:#64748b;
+      --line:#e5e7eb; --bg:#ffffff; --soft:#f8fafc;
+      --radius:16px;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0}
+    body{font-family:"Cairo",system-ui,sans-serif;line-height:1.65;color:var(--ink);background:var(--bg)}
+    a{text-decoration:none;color:inherit}
+    img{max-width:100%;display:block}
+    .container{width:min(1400px,100% - 16px);margin-inline:auto}
+
+    /* Header */
+    nav{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);box-shadow:0 2px 20px rgba(0,0,0,.05)}
+    .nav-wrap{display:flex;align-items:center;justify-content:space-between;height:80px;padding:0 1rem}
+    .logo{display:flex;align-items:center;gap:.75rem;text-decoration:none;color:var(--ink)}
+    .logo img{height:48px;width:auto;transition:transform .3s ease}
+    .logo:hover img{transform:scale(1.05)}
+    .logo-text{font-size:1.5rem;font-weight:900;color:var(--primary);margin:0}
+    .links{display:flex;gap:.5rem;list-style:none;padding:0;margin:0;align-items:center}
+    .links a{font-weight:600;padding:.6rem 1rem;border-radius:999px;display:flex;align-items:center;gap:.4rem;transition:all .3s ease;font-size:.9rem}
+    .links a:hover{background:color-mix(in srgb,var(--primary) 10%, transparent);transform:translateY(-1px)}
+    .links a i{font-size:.8rem;opacity:.8}
+    .btn-book{background:var(--primary)!important;color:#fff!important;font-weight:700!important;box-shadow:0 4px 12px rgba(14,165,165,.3)}
+    .btn-book:hover{background:var(--primary-600)!important;transform:translateY(-2px)!important;box-shadow:0 6px 20px rgba(14,165,165,.4)!important}
+    #menuBtn{display:none;flex-direction:column;gap:4px;border:none;background:transparent;padding:.5rem;cursor:pointer;border-radius:8px;transition:background .3s ease}
+    #menuBtn:hover{background:color-mix(in srgb,var(--primary) 10%, transparent)}
+    #menuBtn span{width:24px;height:3px;background:var(--ink);border-radius:2px;transition:all .3s ease}
+    #menuBtn.active span:nth-child(1){transform:rotate(45deg) translate(6px,6px)}
+    #menuBtn.active span:nth-child(2){opacity:0}
+    #menuBtn.active span:nth-child(3){transform:rotate(-45deg) translate(6px,-6px)}
+    #mobileMenu{display:none;position:absolute;inset-inline:16px;top:85px;background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 20px 40px rgba(0,0,0,.15);padding:1rem;backdrop-filter:blur(10px)}
+    #mobileMenu a{display:flex;align-items:center;gap:.5rem;padding:.8rem 1rem;border-radius:12px;margin-bottom:.25rem;transition:all .3s ease}
+    #mobileMenu a:hover{background:color-mix(in srgb,var(--primary) 10%, transparent);transform:translateX(-4px)}
+    .btn-book-mobile{background:var(--primary)!important;color:#fff!important;font-weight:700!important;justify-content:center!important;margin-top:.5rem!important}
+    .btn-book-mobile:hover{background:var(--primary-600)!important;transform:translateX(-4px) scale(1.02)!important}
+    @media (max-width: 900px){ .links{display:none} #menuBtn{display:flex} }
+
+    /* Hero */
+    .hero{background:var(--soft);padding:3.5rem 0;text-align:center}
+    .badge{display:inline-flex;gap:.5rem;align-items:center;background:#ecfeff;border:1px solid #99f6e4;color:#0b766c;padding:.25rem .7rem;border-radius:999px;font-weight:700;margin-bottom:.9rem;font-size:.9rem}
+    .hero h1{margin:.2rem 0 .6rem;font-size:clamp(1.9rem,3.2vw,2.6rem);font-weight:900}
+    .hero p{color:var(--muted);margin:0 0 1.25rem}
+    .cta{display:flex;gap:.8rem;justify-content:center;flex-wrap:wrap}
+    .btn{padding:.85rem 1.5rem;border-radius:999px;font-weight:800;border:2px solid transparent;cursor:pointer}
+    .btn-primary{background:var(--primary);color:#fff}
+    .btn-primary:hover{background:var(--primary-600)}
+    .btn-outline{border-color:var(--primary);color:var(--primary);background:transparent}
+    .btn-outline:hover{background:#f0fdfa}
+
+    /* Sections */
+    section{padding:3rem 0}
+    .title{text-align:center;font-size:1.9rem;font-weight:900;margin-bottom:.5rem}
+    .desc{text-align:center;color:var(--muted);margin:0 0 2rem}
+
+    /* Cards grid */
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1rem}
+    .card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
+    .card .body{padding:1rem}
+    .card h3{margin:.3rem 0 .4rem;font-weight:800}
+    .muted{color:var(--muted)}
+    .shadow:hover{box-shadow:0 12px 30px rgba(0,0,0,.08);transform:translateY(-2px);transition:.2s}
+
+    /* Services Grid - Professional Design */
+    .services-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(400px,1fr));gap:2rem;max-width:1000px;margin:0 auto}
+    .service-card{background:#fff;border-radius:24px;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,0.1);transition:all 0.3s ease}
+    .service-card:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,0.15)}
+    .service-image{height:200px;overflow:hidden}
+    .service-image img{width:100%;height:100%;object-fit:cover}
+    .service-content{padding:2rem;text-align:center}
+    .service-content h3{font-size:1.5rem;font-weight:900;color:var(--ink);margin-bottom:1rem}
+    .service-content p{color:var(--muted);line-height:1.6;margin-bottom:1.5rem;font-size:0.95rem}
+    .service-content .btn{margin-top:1rem}
+    
+    @media (max-width: 768px) {
+      .services-grid{grid-template-columns:1fr;gap:1.5rem}
+      .service-content{padding:1.5rem}
+      .service-content h3{font-size:1.3rem}
+      .service-image{height:180px}
+    }
+
+    /* Process (timeline) - Simplified */
+    #process{background:#fff;padding:3rem 0}
+    #process .timeline{position:relative;height:3px;background:#e5e7eb;margin:0 auto 2rem;border-radius:999px;width:min(800px,90%)}
+    #process .timeline::before{content:"";position:absolute;inset:0;background:#10b981;height:3px;border-radius:999px}
+    #process .dots{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;width:min(800px,90%);margin:-8px auto 0}
+    #process .dot{width:16px;height:16px;border-radius:50%;background:#10b981;margin-inline:auto}
+    #process .step{text-align:center;padding:1rem 0.5rem}
+    #process .iconbox{width:80px;height:80px;margin:0 auto 1rem;display:grid;place-items:center;background:#f3f4f6;border-radius:12px}
+    #process svg{color:#3b82f6;width:40px;height:40px}
+    #process .step h3{color:#1f2937;font-size:1rem;font-weight:600;margin-bottom:0.5rem}
+    #process .step p{color:#6b7280;line-height:1.5;font-size:0.9rem}
+    
+    @media (max-width: 768px) {
+      #process .timeline{width:85%}
+      #process .dots{width:85%}
+      #process .step{padding:0.8rem 0.3rem}
+      #process .iconbox{width:60px;height:60px;margin-bottom:0.8rem}
+      #process svg{width:30px;height:30px}
+      #process .step h3{font-size:0.9rem}
+      #process .step p{font-size:0.8rem}
+    }
+
+    /* Branches & contact */
+    .branch{background:var(--soft);border:1px solid var(--line);border-radius:14px;padding:1rem}
+    .form-group{display:flex;flex-direction:column;gap:.35rem}
+    .control{padding:.8rem;border:1px solid #d1d5db;border-radius:10px;font:inherit}
+
+    /* Footer */
+    footer{background:#0f172a;color:#fff;padding:2rem 1rem;text-align:center}
+  </style>
+</head>
+<body>
+
+<!-- Header -->
+<nav>
+  <div class="container nav-wrap">
+    <a class="logo" href="index.php" aria-label="الرئيسية">
+      <img src="https://i.postimg.cc/ZKC5781D/2025-07-04-082630.png" alt="شعار المركز" />
+    </a>
+    <ul class="links" aria-label="التنقل الرئيسي">
+      <li><a href="#about"><i class="fas fa-info-circle"></i> عن المركز</a></li>
+      <li><a href="#services"><i class="fas fa-cogs"></i> الخدمات</a></li>
+      <li><a href="#payment"><i class="fas fa-credit-card"></i> بيانات الدفع</a></li>
+      <li><a href="#process"><i class="fas fa-route"></i> رحلة الفحص</a></li>
+      <li><a href="#branches"><i class="fas fa-map-marker-alt"></i> الفروع</a></li>
+      <li><a href="#contact"><i class="fas fa-phone"></i> تواصل</a></li>
+      <li><a href="booking.php" class="btn-book"><i class="fas fa-calendar-plus"></i> احجز موعد</a></li>
+    </ul>
+    <button id="menuBtn" aria-label="فتح القائمة">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+    <div id="mobileMenu" role="dialog" aria-modal="true">
+      <a href="#about"><i class="fas fa-info-circle"></i> عن المركز</a>
+      <a href="#services"><i class="fas fa-cogs"></i> الخدمات</a>
+      <a href="#payment"><i class="fas fa-credit-card"></i> بيانات الدفع</a>
+      <a href="#process"><i class="fas fa-route"></i> رحلة الفحص</a>
+      <a href="#branches"><i class="fas fa-map-marker-alt"></i> الفروع</a>
+      <a href="#contact"><i class="fas fa-phone"></i> تواصل</a>
+      <a href="booking.php" class="btn-book-mobile"><i class="fas fa-calendar-plus"></i> احجز موعد</a>
+    </div>
+  </div>
+</nav>
+
+<!-- Hero -->
+<header class="hero" id="about">
+  <div class="container">
+    <div class="badge">جديد • مراكز نموذجية بمعايير عالمية</div>
+    <h1>بوابة الفحص الفني للمركبات</h1>
+    <p>احجز موعدك الآن وتعرّف على خدماتنا وأسعارنا بكل سهولة وشفافية.</p>
+    <div class="cta">
+      <a class="btn btn-primary" href="booking.php">احجز موعد</a>
+      <a class="btn btn-outline" href="#services">تعرّف على خدماتنا</a>
+    </div>
+  </div>
+</header>
+
+<!-- Services -->
+<section id="services">
+  <div class="container">
+    <h2 class="title">الخدمات</h2>
+    <div class="services-grid">
+      <div class="service-card">
+        <div class="service-image">
+          <img src="https://www.salamah.net/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fbranch-service.9ae6e38c.webp&w=1200&q=75" alt="خدمة الفحص الفني في الفروع" />
+        </div>
+        <div class="service-content">
+          <h3>خدمة الفحص الفني في الفروع</h3>
+          <p>تتيح هذه الخدمة لعملاء المركز إمكانية حجز المواعيد لفحص المركبات بشكل مباشر، وبإشراف من الهيئة السعودية للمواصفات والمقاييس والجودة</p>
+          <a href="booking.php" class="btn btn-primary">احجز موعد</a>
+        </div>
+      </div>
+      
+      <div class="service-card">
+        <div class="service-image">
+          <img src="https://www.salamah.net/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fmobile-inspection.eaebc18a.webp&w=1200&q=75" alt="خدمة الفحص المتنقل" />
+        </div>
+        <div class="service-content">
+          <h3>خدمة الفحص المتنقل</h3>
+          <p>خدمة الفحص الفني الدوري المتنقلة للشركات التي تمتلك أساطيل لمختلف أنواع وأحجام المركبات، حيث تتم خدمتهم في مواقعهم مما يسهل إجراء عمليات الفحص دون الحاجة لمراجعة أحد مراكز تقديم خدمات الفحص الفني.</p>
+          <a href="#contact" class="btn btn-primary">اطلب الخدمة</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Pricing / Slider include -->
+<?php include 'slider.php'; ?>
+
+<!-- Process -->
+<section id="process" aria-labelledby="process-title">
+  <div class="container">
+    <h2 id="process-title" class="title">رحلة الفحص الفني الدوري</h2>
+    <p class="desc">أربع خطوات بسيطة لإتمام فحص مركبتك.</p>
+  </div>
+
+  <div class="timeline"></div>
+  <div class="dots" aria-hidden="true">
+    <span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span>
+  </div>
+
+  <div class="container" style="margin-top:1.2rem">
+    <div class="grid" style="align-items:start">
+      <div class="step">
+        <div class="iconbox">
+          <!-- حاسوب مع سيارة -->
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+            <line x1="8" y1="21" x2="16" y2="21"></line>
+            <line x1="12" y1="17" x2="12" y2="21"></line>
+            <path d="M6 8h2m4 0h2"></path>
+            <path d="M6 12h8"></path>
+            <path d="M6 15h4"></path>
+            <circle cx="16" cy="8" r="1" fill="#10b981"></circle>
+            <path d="M15 7l2 2-2 2" stroke="#10b981"></path>
+          </svg>
+        </div>
+        <h3>حجز موعد</h3>
+        <p class="muted">حجز موعد لإجراء الفحص الفني الدوري للمركبة</p>
+      </div>
+
+      <div class="step">
+        <div class="iconbox">
+          <!-- هاتف مع رمز الدفع -->
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+            <line x1="12" y1="18" x2="12.01" y2="18"></line>
+            <circle cx="12" cy="8" r="2" fill="#10b981"></circle>
+            <path d="M10 12h4"></path>
+            <path d="M10 14h2"></path>
+            <path d="M12 6l2 2-2 2" stroke="#10b981"></path>
+          </svg>
+        </div>
+        <h3>التحقق من الموعد</h3>
+        <p class="muted">التحقق من الموعد عند الوصول إلى مركز الفحص عبر كبينة التسجيل ودفع رسوم الخدمة</p>
+      </div>
+
+      <div class="step">
+        <div class="iconbox">
+          <!-- فني يفحص السيارة -->
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 16h4l2-3h6a3 3 0 0 0 0-6h-2"></path>
+            <circle cx="9" cy="18" r="2"></circle>
+            <circle cx="17" cy="18" r="2"></circle>
+            <path d="M8 12h2"></path>
+            <path d="M14 12h2"></path>
+            <circle cx="12" cy="8" r="1" fill="#10b981"></circle>
+            <path d="M11 7l2 2-2 2" stroke="#10b981"></path>
+          </svg>
+        </div>
+        <h3>بدء الفحص</h3>
+        <p class="muted">تسليم المركبة للفني وبدء عملية الفحص</p>
+      </div>
+
+      <div class="step">
+        <div class="iconbox">
+          <!-- سيارة مع تقرير -->
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 16h4l2-3h6a3 3 0 0 0 0-6h-2"></path>
+            <circle cx="9" cy="18" r="2"></circle>
+            <circle cx="17" cy="18" r="2"></circle>
+            <rect x="14" y="2" width="6" height="8" rx="1"></rect>
+            <line x1="16" y1="6" x2="18" y2="6"></line>
+            <line x1="16" y1="8" x2="18" y2="8"></line>
+            <path d="M17 10l1 1-1 1" stroke="#10b981"></path>
+            <path d="M15 12l2 2 4-4" stroke="#10b981"></path>
+          </svg>
+        </div>
+        <h3>استلام النتيجة</h3>
+        <p class="muted">الانتهاء من الفحص وتسليم النتيجة</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Payment Info -->
+<section id="payment" style="background: var(--soft);">
+  <div class="container">
+    <h2 class="title">بيانات الدفع</h2>
+    <p class="desc">طرق الدفع المتاحة وأسعار خدماتنا.</p>
+    
+    <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-top: 2rem;">
+      <!-- طرق الدفع -->
+      <div class="card" style="padding: 2rem; text-align: center;">
+        <div style="background: var(--primary); color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; font-size: 1.5rem;">
+          <i class="fas fa-credit-card"></i>
+        </div>
+        <h3 style="margin-bottom: 1rem; color: var(--ink);">البطاقات الائتمانية</h3>
+        <p class="muted" style="margin-bottom: 1.5rem;">نقبل جميع البطاقات الائتمانية الرئيسية</p>
+        <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+          <div style="background: #f8f9fa; padding: 0.5rem 1rem; border-radius: 8px; font-weight: 600; color: var(--ink);">Visa</div>
+          <div style="background: #f8f9fa; padding: 0.5rem 1rem; border-radius: 8px; font-weight: 600; color: var(--ink);">Mastercard</div>
+          <div style="background: #f8f9fa; padding: 0.5rem 1rem; border-radius: 8px; font-weight: 600; color: var(--ink);">Mada</div>
+        </div>
+      </div>
+      
+      <!-- الأسعار -->
+      <div class="card" style="padding: 2rem; text-align: center;">
+        <div style="background: #10b981; color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; font-size: 1.5rem;">
+          <i class="fas fa-tags"></i>
+        </div>
+        <h3 style="margin-bottom: 1rem; color: var(--ink);">أسعار الخدمات</h3>
+        <div style="text-align: right; margin-bottom: 1.5rem;">
+          <div style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid var(--line);">
+            <span style="font-weight: 600; color: var(--ink);">رسوم الفحص الفني</span>
+            <span style="color: var(--primary); font-weight: 700;">100 ريال</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid var(--line);">
+            <span style="font-weight: 600; color: var(--ink);">رسوم الخدمة</span>
+            <span style="color: var(--primary); font-weight: 700;">32.25 ريال</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; padding: 0.5rem 0; font-size: 1.1rem; font-weight: 700;">
+            <span style="color: var(--ink);">المجموع</span>
+            <span style="color: var(--primary);">132.25 ريال</span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- الأمان -->
+      <div class="card" style="padding: 2rem; text-align: center;">
+        <div style="background: #f59e0b; color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; font-size: 1.5rem;">
+          <i class="fas fa-shield-alt"></i>
+        </div>
+        <h3 style="margin-bottom: 1rem; color: var(--ink);">الأمان والحماية</h3>
+        <p class="muted" style="margin-bottom: 1.5rem;">معاملاتك محمية بتشفير SSL</p>
+        <div style="display: flex; justify-content: center; gap: 0.5rem; flex-wrap: wrap;">
+          <div style="background: #22c55e; color: white; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">SSL</div>
+          <div style="background: #22c55e; color: white; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">آمن</div>
+          <div style="background: #22c55e; color: white; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">محمي</div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- معلومات إضافية -->
+    <div style="background: white; padding: 2rem; border-radius: 16px; margin-top: 2rem; border: 1px solid var(--line);">
+      <h4 style="text-align: center; margin-bottom: 1.5rem; color: var(--ink);">معلومات مهمة حول الدفع</h4>
+      <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+        <div style="text-align: center;">
+          <i class="fas fa-clock" style="color: var(--primary); font-size: 1.5rem; margin-bottom: 0.5rem;"></i>
+          <h5 style="margin-bottom: 0.5rem; color: var(--ink);">معالجة فورية</h5>
+          <p class="muted" style="font-size: 0.9rem;">يتم معالجة الدفع فوراً بعد التأكيد</p>
+        </div>
+        <div style="text-align: center;">
+          <i class="fas fa-receipt" style="color: var(--primary); font-size: 1.5rem; margin-bottom: 0.5rem;"></i>
+          <h5 style="margin-bottom: 0.5rem; color: var(--ink);">إيصال فوري</h5>
+          <p class="muted" style="font-size: 0.9rem;">ستحصل على إيصال فوري عبر البريد الإلكتروني</p>
+        </div>
+        <div style="text-align: center;">
+          <i class="fas fa-undo" style="color: var(--primary); font-size: 1.5rem; margin-bottom: 0.5rem;"></i>
+          <h5 style="margin-bottom: 0.5rem; color: var(--ink);">إمكانية الإلغاء</h5>
+          <p class="muted" style="font-size: 0.9rem;">يمكن إلغاء الحجز قبل 24 ساعة من الموعد</p>
+        </div>
+        <div style="text-align: center;">
+          <i class="fas fa-headset" style="color: var(--primary); font-size: 1.5rem; margin-bottom: 0.5rem;"></i>
+          <h5 style="margin-bottom: 0.5rem; color: var(--ink);">دعم فني</h5>
+          <p class="muted" style="font-size: 0.9rem;">فريق الدعم متاح لمساعدتك في أي وقت</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Branches -->
+<section id="branches">
+  <div class="container">
+    <h2 class="title">فروعنا</h2>
+    <p class="desc">تواجدنا لخدمتكم في عدة مواقع بالرياض.</p>
+    <div class="grid">
+      <div class="branch">
+        <h3>واجهة روشن (ساسكو)</h3>
+        <p class="muted">السبت–الخميس: 7ص–11م • الجمعة: 3م–11م</p>
+        <p style="margin:.6rem 0 0"><a class="btn btn-outline" href="https://maps.google.com" target="_blank" rel="noopener">عرض على الخرائط</a></p>
+      </div>
+      <div class="branch">
+        <h3>القيروان</h3>
+        <p class="muted">السبت–الخميس: 7ص–11م • الجمعة: 3م–11م</p>
+        <p style="margin:.6rem 0 0"><a class="btn btn-outline" href="https://maps.google.com" target="_blank" rel="noopener">عرض على الخرائط</a></p>
+      </div>
+      <div class="branch">
+        <h3>الفيصلية (مخرج 17)</h3>
+        <p class="muted">السبت–الخميس: 7ص–11م • الجمعة: 3م–11م</p>
+        <p style="margin:.6rem 0 0"><a class="btn btn-outline" href="https://maps.google.com" target="_blank" rel="noopener">عرض على الخرائط</a></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Contact -->
+<section id="contact">
+  <div class="container">
+    <h2 class="title">تواصل معنا</h2>
+    <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(280px,1fr))">
+      <div>
+        <p>📍 الرياض، المملكة العربية السعودية</p>
+        <p>📞 920000000</p>
+        <p>✉️ info@salamah.net</p>
+      </div>
+      <form method="post" action="send.php" class="card" style="padding:1rem">
+        <div class="form-group">
+          <label>الاسم الكامل</label>
+          <input class="control" type="text" name="name" required>
+        </div>
+        <div class="form-group">
+          <label>البريد الإلكتروني</label>
+          <input class="control" type="email" name="email" required>
+        </div>
+        <div class="form-group">
+          <label>الرسالة</label>
+          <textarea class="control" name="message" rows="4" required></textarea>
+        </div>
+        <button class="btn btn-primary" type="submit">إرسال</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <p>© <?php echo date('Y'); ?> مركز الفحص الفني. جميع الحقوق محفوظة.</p>
+</footer>
+
+<!-- Scripts -->
+<script>
+  // تمرير ناعم للروابط الداخلية
+  document.querySelectorAll('a[href^="#"]').forEach(a=>{
+    a.addEventListener('click',e=>{
+      const id=a.getAttribute('href');
+      if(id.length>1 && document.querySelector(id)){
+        e.preventDefault();
+        document.querySelector(id).scrollIntoView({behavior:'smooth',block:'start'});
+        history.pushState(null,'',id);
+      }
+    });
+  });
+
+  // قائمة الجوال
+  (function(){
+    const btn=document.getElementById('menuBtn');
+    const menu=document.getElementById('mobileMenu');
+    if(!btn||!menu) return;
+    btn.addEventListener('click',()=>{
+      const open=menu.style.display==='block';
+      menu.style.display=open?'none':'block';
+      btn.classList.toggle('active',!open);
+      btn.setAttribute('aria-expanded',String(!open));
+    });
+    menu.querySelectorAll('a').forEach(l=> l.addEventListener('click',()=> {
+      menu.style.display='none';
+      btn.classList.remove('active');
+      btn.setAttribute('aria-expanded','false');
+    }));
+  })();
+</script>
+</body>
+</html>
